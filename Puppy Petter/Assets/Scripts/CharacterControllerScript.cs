@@ -28,14 +28,6 @@ public class CharacterControllerScript : MonoBehaviour {
 		//maxHeight = targetHeight.y;
 	}
 
-/* 
-	void FixedUpdate() {
-		Vector3 rawPosition = cam.ScreenToWorldPoint (Input.mousePosition);
-		Vector3 targetPosition = new Vector3 (0, rawPosition.y, 0);
-		rigid.MovePosition (targetPosition);
-	}
-*/	
-
 	// Update is called once per frame
 	void Update () {
 		// Up and down arrows input
@@ -45,6 +37,6 @@ public class CharacterControllerScript : MonoBehaviour {
 		anim.SetFloat("speed", move);
 
 		// Update character velocity
-		rigid.velocity = new Vector2(rigid.velocity.x, move * maxSpeed);
+		rigid.velocity = new Vector2(0, move * maxSpeed);
 	}
 }
