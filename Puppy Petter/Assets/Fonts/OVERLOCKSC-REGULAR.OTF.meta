@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 04a23fc2ce2afa641a0757317e237edb
+timeCreated: 1489087977
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Overlock SC
+  fontNames:
+  - Overlock SC
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
