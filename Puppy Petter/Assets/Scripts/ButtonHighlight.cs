@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ButtonHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler {
     public Image corgi;
+    public AudioClip puppySounds;
 
     void Start () {
         corgi.enabled = false;
@@ -13,10 +14,12 @@ public class ButtonHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
 	public void OnPointerEnter (PointerEventData eventData) {
         corgi.enabled = true;
+        SoundManager.instance.PlaySingle(puppySounds);
     }
 
     public void OnSelect (BaseEventData eventData) {
         corgi.enabled = true;
+        SoundManager.instance.PlaySingle(puppySounds);
     }
 
 	public void OnPointerExit (PointerEventData eventData) {

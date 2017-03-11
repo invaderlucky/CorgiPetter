@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ScoreScript : MonoBehaviour {
 	public GameObject heart;
+	public AudioClip puppySounds;
 
 	public Text scoreText;
 	public int corgiValue;
@@ -25,6 +26,9 @@ public class ScoreScript : MonoBehaviour {
 			score += corgiValue;
 			DisplayScore ();
 
+			// Play bark
+			//SoundManager.instance.PlaySingle(puppySounds);
+
 			// Spawn above player
 			Vector3 spawnPosition = new Vector3 (
 				transform.position.x + 0.5f, 
@@ -43,6 +47,8 @@ public class ScoreScript : MonoBehaviour {
 
 	public void DecScore () {
 		score -= corgiValue;
+		if (score < 0)
+			score = 0;
 		DisplayScore ();
 	}
 
