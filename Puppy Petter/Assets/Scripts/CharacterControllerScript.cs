@@ -33,7 +33,7 @@ public class CharacterControllerScript : MonoBehaviour {
 	}
 */
 	void Update() {
-		//if (PlayerPrefs.GetInt("Pause") == 0) {
+		if (Time.timeScale != 0) {
 			float move = Input.GetAxis("Vertical");
 
 			if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) {
@@ -55,6 +55,6 @@ public class CharacterControllerScript : MonoBehaviour {
 			
 			// Update character velocity
 			rigid.velocity = new Vector2(0, move * maxSpeed);
-		//}
+		}
 	}
 }

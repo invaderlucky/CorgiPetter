@@ -78,16 +78,24 @@ public class GameManagerScript : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D other) {
 		// Get rid of corgi object
-		if (other.gameObject.tag == "Corgi" ) {
-			Destroy (other.gameObject);
-			ScoreScript scoring = player.gameObject.GetComponent<ScoreScript>();
-			// Only penalize the score if time based
-			if (PlayerPrefs.GetInt("GameMode") == 0)
-				scoring.DecScore ();
-			else
-				lives--;
+		if (Time.timeScale != 0) {
+			if (other.gameObject.tag == "Corgi" ) {
+				Destroy (other.gameObject);
+				ScoreScript scoring = player.gameObject.GetComponent<ScoreScript>();
+				// Only penalize the score if time based
+				if (PlayerPrefs.GetInt("GameMode") == 0)
+					scoring.DecScore ();
+				else
+					lives--;
+			}
 		}
 	}
+
+	/*void Update () {
+		if (Input.GetKey(KeyCode.Escape)) {
+			Time.timeScale = 0;
+		}
+	}*/
 
 	void FixedUpdate () {
 		//if (!paused) {
@@ -113,11 +121,12 @@ public class GameManagerScript : MonoBehaviour {
 	}
 	
 	IEnumerator Spawn () {
+		if (Time.timeScale != 0) {
 		yield return new WaitForSeconds (2.0f);
 		// Make corgi's until time's up
 		if (PlayerPrefs.GetInt("GameMode") == 0) {
 			while (timeLeft > 0) {
-				//if (!paused) {
+				if (Time.timeScale != 0) {
 					// Spawn in bounds of camera
 					Vector3 spawnPosition = new Vector3 (
 						transform.position.x, 
@@ -130,12 +139,12 @@ public class GameManagerScript : MonoBehaviour {
 					Instantiate (corgi, spawnPosition, spawnRotation);
 
 					yield return new WaitForSeconds (Random.Range (lowDelay, highDelay));
-				//}
+				}
 			}
 		}
 		else if (PlayerPrefs.GetInt("GameMode") == 1) {
 			while (lives > 1) {
-				//if (!paused) {
+				if (Time.timeScale != 0) {
 					// Spawn in bounds of camera
 					Vector3 spawnPosition = new Vector3 (
 						transform.position.x, 
@@ -148,12 +157,13 @@ public class GameManagerScript : MonoBehaviour {
 					Instantiate (corgi, spawnPosition, spawnRotation);
 
 					yield return new WaitForSeconds (Random.Range (lowDelay, highDelay));
-				//}
+				}
 			}
 		}
 		// Save score at end
 		PlayerPrefs.SetInt("Score", player.GetComponent<ScoreScript>().getScore());
 		// Load game over screen
 		SceneManager.LoadScene (GAME_OVER);
+		}
 	}
 }

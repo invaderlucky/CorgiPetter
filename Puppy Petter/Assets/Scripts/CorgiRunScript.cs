@@ -12,8 +12,7 @@ public class CorgiRunScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log("NOO");
-		//if (PlayerPrefs.GetInt("Pause") == 0)
+		if (Time.timeScale != 0)
 			transform.Translate(Vector2.right * speed);
 	}
 }
