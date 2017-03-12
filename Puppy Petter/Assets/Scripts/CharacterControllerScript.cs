@@ -21,7 +21,7 @@ public class CharacterControllerScript : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+/*	void Update () {
 		// Up and down arrows input
 		float move = Input.GetAxis("Vertical");
 
@@ -30,5 +30,31 @@ public class CharacterControllerScript : MonoBehaviour {
 
 		// Update character velocity
 		rigid.velocity = new Vector2(0, move * maxSpeed);
+	}
+*/
+	void Update() {
+		//if (PlayerPrefs.GetInt("Pause") == 0) {
+			float move = Input.GetAxis("Vertical");
+
+			if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) {
+				anim.SetBool("upPressed", true);
+				anim.SetBool("upReleased", false);
+			}
+			if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) {
+				anim.SetBool("downPressed", true);
+				anim.SetBool("downReleased", false);
+			}
+			if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W)) {
+				anim.SetBool("upReleased", true);
+				anim.SetBool("upPressed", false);
+			}
+			if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S)) {
+				anim.SetBool("downReleased", true);
+				anim.SetBool("downPressed", false);
+			}
+			
+			// Update character velocity
+			rigid.velocity = new Vector2(0, move * maxSpeed);
+		//}
 	}
 }

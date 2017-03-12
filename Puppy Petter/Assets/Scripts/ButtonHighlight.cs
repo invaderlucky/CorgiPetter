@@ -14,11 +14,13 @@ public class ButtonHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
 	public void OnPointerEnter (PointerEventData eventData) {
         corgi.enabled = true;
+        corgi.gameObject.SetActive(true);
         SoundManager.instance.PlaySingle(puppySounds);
     }
 
     public void OnSelect (BaseEventData eventData) {
         corgi.enabled = true;
+        corgi.gameObject.SetActive(true);
         SoundManager.instance.PlaySingle(puppySounds);
     }
 
