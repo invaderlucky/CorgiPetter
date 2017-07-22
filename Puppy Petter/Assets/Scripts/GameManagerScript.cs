@@ -23,6 +23,15 @@ public class GameManagerScript : MonoBehaviour {
 
 	public bool paused;
 
+    private enum characterCodes {
+        BLUE,
+        PINK,
+        PURPLE,
+        RED,
+        GREEN,
+        ORANGE
+    }
+
 	void Start () {
 		// Make sure default camera is assigned
 		if (cam == null)
@@ -34,21 +43,25 @@ public class GameManagerScript : MonoBehaviour {
 		Vector3 upperCorner = new Vector3 (Screen.width, Screen.height, 0);
 		Vector3 targetHeight = cam.ScreenToWorldPoint (upperCorner);
 
-		if (PlayerPrefs.GetInt("CharacterRep") == 0) {
+        GameObject.Find("BlueCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.BLUE);
+        GameObject.Find("PinkCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.PINK);
+        GameObject.Find("PurpleCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.PURPLE);
+        GameObject.Find("RedCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.RED);
+        GameObject.Find("GreenCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.GREEN);
+        GameObject.Find("OrangeCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.ORANGE);
+
+		if (PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.BLUE)
 			player = GameObject.Find("BlueCharacter");
-			GameObject.Find("PinkCharacter").SetActive(false);
-			GameObject.Find("PurpleCharacter").SetActive(false);
-		}
-		if (PlayerPrefs.GetInt("CharacterRep") == 1) {
+		else if (PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.PINK)
 			player = GameObject.Find("PinkCharacter");
-			GameObject.Find("BlueCharacter").SetActive(false);
-			GameObject.Find("PurpleCharacter").SetActive(false);
-		}
-		if (PlayerPrefs.GetInt("CharacterRep") == 2) {
+		else if (PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.PURPLE)
 			player = GameObject.Find("PurpleCharacter");
-			GameObject.Find("BlueCharacter").SetActive(false);
-			GameObject.Find("PinkCharacter").SetActive(false);
-		}
+		else if (PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.RED)
+			player = GameObject.Find("RedCharacter");
+		else if (PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.GREEN)
+			player = GameObject.Find("GreenCharacter");
+		else if (PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.ORANGE)
+			player = GameObject.Find("OrangeCharacter");
 
 		// Get the corgi's renderer
 		Renderer corgiRend = corgi.GetComponent<Renderer>();
@@ -67,13 +80,6 @@ public class GameManagerScript : MonoBehaviour {
 			Time.timeScale = 0.0f;
 		else
 			Time.timeScale = 1.0f;
-		/*
-		paused = pause;
-		if (pause)
-			PlayerPrefs.SetInt("Pause", 1);
-		else
-			PlayerPrefs.SetInt("Pause", 0);
-		*/
 	}
 
 	void OnTriggerEnter2D (Collider2D other) {
@@ -92,9 +98,8 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	/*void Update () {
-		if (Input.GetKey(KeyCode.Escape)) {
-			Time.timeScale = 0;
-		}
+		if (Input.GetKey(KeyCode.Escape))
+			TogglePauseMenu(Time.timeScale > 0.0f);
 	}*/
 
 	void FixedUpdate () {

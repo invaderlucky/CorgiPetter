@@ -9,6 +9,9 @@ public class Customization : MonoBehaviour {
 
 	void Start () {
 		idx = 0;
+        // Disable all but first image on start
+		for (int i = 1; i < reps.Length; i++)
+			reps[i].enabled = false;
 	}
 
 	public void DisplayNextImage () {
