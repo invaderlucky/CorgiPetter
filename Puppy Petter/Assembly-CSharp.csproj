@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\GameManagerScript.cs" />
      <Compile Include="Assets\Scripts\GameMode.cs" />
      <Compile Include="Assets\Scripts\IconChanger.cs" />
+     <Compile Include="Assets\Scripts\KeyButtonScript.cs" />
      <Compile Include="Assets\Scripts\LoadSceneOnClick.cs" />
      <Compile Include="Assets\Scripts\QuitOnClick.cs" />
      <Compile Include="Assets\Scripts\ScoreScript.cs" />

@@ -97,11 +97,6 @@ public class GameManagerScript : MonoBehaviour {
 		}
 	}
 
-	/*void Update () {
-		if (Input.GetKey(KeyCode.Escape))
-			TogglePauseMenu(Time.timeScale > 0.0f);
-	}*/
-
 	void FixedUpdate () {
 		//if (!paused) {
 			if (PlayerPrefs.GetInt("GameMode") == 0) {
