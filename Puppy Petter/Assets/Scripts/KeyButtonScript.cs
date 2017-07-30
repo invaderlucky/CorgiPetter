@@ -16,7 +16,7 @@ public KeyCode key;
  
      void Awake() {
          button = GetComponent<Button>();
-         //button.interactable = false;
+         button.interactable = true;
          targetGraphic = GetComponent<Graphic>();
  
          ColorBlock cb = button.colors;
@@ -25,7 +25,7 @@ public KeyCode key;
      }
  
      void Start() {
-         button.targetGraphic = null;
+        // button.targetGraphic = null;
          Up();
      }
  
