@@ -5,56 +5,81 @@ using UnityEngine;
 public class CharacterControllerScript : MonoBehaviour {
 	public float maxSpeed = 0f;
 	private float maxHeight;
+	private Vector2 currentTarget;
+	private Vector3 touchToWorld;
+
+	GUIStyle style;
 
 	Animator anim;
 	Rigidbody2D rigid;
 	public Camera cam;
+	public float offset = 0f;
 
 	// Use this for initialization
-	void Start () {// Character's rigid body
+	void Start () {
+		// Character's rigid body
 		rigid = GetComponent<Rigidbody2D>();
 		// Character's animator
 		anim = GetComponent<Animator>();
 		// Set default camera to main camera
 		if (cam == null) 
 			cam = Camera.main;
+		style = new GUIStyle ();
+		style.normal.textColor = Color.black;
+		touchToWorld = rigid.position;
 	}
-
-	// Update is called once per frame
-/*	void Update () {
-		// Up and down arrows input
-		float move = Input.GetAxis("Vertical");
-
-		// Update animator speed
-		anim.SetFloat("speed", move);
-
-		// Update character velocity
-		rigid.velocity = new Vector2(0, move * maxSpeed);
-	}
-*/
+		
 	void Update() {
-		if (Time.timeScale != 0) {
-			float move = Input.GetAxis("Vertical");
 
-			if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) {
-				anim.SetBool("upPressed", true);
-				anim.SetBool("upReleased", false);
+	}
+
+	void OnGUI () {			
+		if (Time.timeScale != 0) {	
+			foreach (Touch touch in Input.touches) {
+				// Need to save the last finger used
+				if (touch.phase == TouchPhase.Began) {
+					currentTarget = touch.position; 
+					touchToWorld = Camera.main.ScreenToWorldPoint (currentTarget);
+				}
 			}
-			if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) {
-				anim.SetBool("downPressed", true);
-				anim.SetBool("downReleased", false);
+
+			//GUI.Label(new Rect(130, 200, 200, 100), "Current position = " + rigid.position.x + ", " + rigid.position.y, style ); 
+			//GUI.Label(new Rect(130, 300, 200, 100), "Current target = " + currentTarget.x + ", " + currentTarget.y, style );  
+			//GUI.Label(new Rect(130, 400, 200, 100), "Touch to world = " + touchToWorld.x + ", " + touchToWorld.y, style ); 
+
+			float move = 0f;
+			if (rigid.position.y > touchToWorld.y + offset) {
+				// Move down
+				move = -1.0f;				
+				DownAnimations(true);
+				UpAnimations(false);
 			}
-			if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W)) {
-				anim.SetBool("upReleased", true);
-				anim.SetBool("upPressed", false);
+			else if (rigid.position.y < touchToWorld.y - offset) {
+				// Move up
+				move = 1.0f;		
+				DownAnimations(false);
+				UpAnimations(true);
 			}
-			if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S)) {
-				anim.SetBool("downReleased", true);
-				anim.SetBool("downPressed", false);
+			else {
+				// Stop moving
+				DownAnimations(false);
+				UpAnimations(false);
 			}
-			
+
 			// Update character velocity
 			rigid.velocity = new Vector2(0, move * maxSpeed);
 		}
+	}
+
+	// param = play: start the animation or not
+	void UpAnimations( bool play ) {
+		anim.SetBool("upPressed", play);
+		anim.SetBool("upReleased", !play);
+	}
+
+	// param = play: start the animation or not
+	void DownAnimations( bool play ) {
+		anim.SetBool("downPressed", play);
+		anim.SetBool("downReleased", !play);
 	}
 }
