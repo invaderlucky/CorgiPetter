@@ -19,7 +19,9 @@ public class GameManagerScript : MonoBehaviour {
 	public Text livesText;
 
 	private float maxHeight;
+	private float minHeight;
 	private float corgiHeight;
+	private float spawnOffset = 4.5f;
 
 	public bool paused;
 
@@ -68,7 +70,8 @@ public class GameManagerScript : MonoBehaviour {
 
 		// Corgi bounds
 		corgiHeight = corgiRend.bounds.extents.y;
-		maxHeight = targetHeight.y - corgiHeight;
+		maxHeight = targetHeight.y - (corgiHeight * 3.0f);
+		minHeight = corgiHeight * 2.5f;
 
 		DisplayTime();
 		DisplayLives();
@@ -98,6 +101,11 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+		// Make sure corgis only spawn within certain units of the player
+		maxHeight = player.gameObject.GetComponent<Rigidbody2D> ().position.y + spawnOffset;
+		minHeight = player.gameObject.GetComponent<Rigidbody2D> ().position.y - spawnOffset;
+		Mathf.Clamp (maxHeight, corgiHeight * 2.5f, Screen.height - (corgiHeight * 3.0f));
+		Mathf.Clamp (minHeight, corgiHeight * 2.5f, Screen.height - (corgiHeight * 3.0f));
 		//if (!paused) {
 			if (PlayerPrefs.GetInt("GameMode") == 0) {
 				if (timeLeft > 0)
@@ -122,48 +130,48 @@ public class GameManagerScript : MonoBehaviour {
 	
 	IEnumerator Spawn () {
 		if (Time.timeScale != 0) {
-		yield return new WaitForSeconds (2.0f);
-		// Make corgi's until time's up
-		if (PlayerPrefs.GetInt("GameMode") == 0) {
-			while (timeLeft > 0) {
-				if (Time.timeScale != 0) {
-					// Spawn in bounds of camera
-					Vector3 spawnPosition = new Vector3 (
-						transform.position.x, 
-						Random.Range (-maxHeight, maxHeight - corgiHeight * 2.5f), 
-						0.0f);
+			yield return new WaitForSeconds (2.0f);
+			// Make corgi's until time's up
+			if (PlayerPrefs.GetInt("GameMode") == 0) {
+				while (timeLeft > 0) {
+					if (Time.timeScale != 0) {
+						// Spawn in bounds of camera
+						Vector3 spawnPosition = new Vector3 (
+							transform.position.x, 
+							Random.Range (-maxHeight, maxHeight - corgiHeight * 2.5f), 
+							0.0f);
 
-					// No rotation
-					Quaternion spawnRotation = Quaternion.identity;
+						// No rotation
+						Quaternion spawnRotation = Quaternion.identity;
 
-					Instantiate (corgi, spawnPosition, spawnRotation);
+						Instantiate (corgi, spawnPosition, spawnRotation);
 
-					yield return new WaitForSeconds (Random.Range (lowDelay, highDelay));
+						yield return new WaitForSeconds (Random.Range (lowDelay, highDelay));
+					}
 				}
 			}
-		}
-		else if (PlayerPrefs.GetInt("GameMode") == 1) {
-			while (lives > 1) {
-				if (Time.timeScale != 0) {
-					// Spawn in bounds of camera
-					Vector3 spawnPosition = new Vector3 (
-						transform.position.x, 
-						Random.Range (-maxHeight, maxHeight - corgiHeight * 3.0f), 
-						0.0f);
+			else if (PlayerPrefs.GetInt("GameMode") == 1) {
+				while (lives > 1) {
+					if (Time.timeScale != 0) {
+						// Spawn in bounds of camera
+						Vector3 spawnPosition = new Vector3 (
+							transform.position.x, 
+							Random.Range (-maxHeight, maxHeight - corgiHeight * 3.0f), 
+							0.0f);
 
-					// No rotation
-					Quaternion spawnRotation = Quaternion.identity;
+						// No rotation
+						Quaternion spawnRotation = Quaternion.identity;
 
-					Instantiate (corgi, spawnPosition, spawnRotation);
+						Instantiate (corgi, spawnPosition, spawnRotation);
 
-					yield return new WaitForSeconds (Random.Range (lowDelay, highDelay));
+						yield return new WaitForSeconds (Random.Range (lowDelay, highDelay));
+					}
 				}
 			}
-		}
-		// Save score at end
-		PlayerPrefs.SetInt("Score", player.GetComponent<ScoreScript>().getScore());
-		// Load game over screen
-		SceneManager.LoadScene (GAME_OVER);
+			// Save score at end
+			PlayerPrefs.SetInt("Score", player.GetComponent<ScoreScript>().getScore());
+			// Load game over screen
+			SceneManager.LoadScene (GAME_OVER);
 		}
 	}
 }

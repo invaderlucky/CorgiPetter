@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/park.unity
+- path: Assets/gameover.unity
   isLoaded: 1
   isActive: 1
