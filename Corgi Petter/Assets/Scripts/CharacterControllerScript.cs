@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class CharacterControllerScript : MonoBehaviour {
 	public float maxSpeed = 0f;
+	public float offset = 0f;
+
 	private float maxHeight;
+	private float xLocked;
 	private Vector2 currentTarget;
 	private Vector3 touchToWorld;
 
@@ -13,12 +16,12 @@ public class CharacterControllerScript : MonoBehaviour {
 	Animator anim;
 	Rigidbody2D rigid;
 	public Camera cam;
-	public float offset = 0f;
 
 	// Use this for initialization
 	void Start () {
 		// Character's rigid body
 		rigid = GetComponent<Rigidbody2D>();
+		xLocked = rigid.position.x;
 		// Character's animator
 		anim = GetComponent<Animator>();
 		// Set default camera to main camera
@@ -45,10 +48,16 @@ public class CharacterControllerScript : MonoBehaviour {
 
 			//GUI.Label(new Rect(130, 200, 200, 100), "Current position = " + rigid.position.x + ", " + rigid.position.y, style ); 
 			//GUI.Label(new Rect(130, 300, 200, 100), "Current target = " + currentTarget.x + ", " + currentTarget.y, style );  
-			//GUI.Label(new Rect(130, 400, 200, 100), "Touch to world = " + touchToWorld.x + ", " + touchToWorld.y, style ); 
+			//GUI.Label(new Rect(130, 500, 200, 100), "Touch to world = " + touchToWorld.x + ", " + touchToWorld.y, style ); 
 
 			float move = 0f;
-			if (rigid.position.y > touchToWorld.y + offset) {
+			// Ignore pause button tap
+			if (touchToWorld.y > 3.5f && touchToWorld.x > 6.5f) {
+				// Stop moving
+				DownAnimations(false);
+				UpAnimations(false);
+			}
+			else if (rigid.position.y > touchToWorld.y + offset) {
 				// Move down
 				move = -1.0f;				
 				DownAnimations(true);
@@ -68,6 +77,10 @@ public class CharacterControllerScript : MonoBehaviour {
 
 			// Update character velocity
 			rigid.velocity = new Vector2(0, move * maxSpeed);
+
+			if (rigid.position.x != xLocked) {
+				rigid.position = new Vector2 (xLocked, rigid.position.y);
+			}
 		}
 	}
 

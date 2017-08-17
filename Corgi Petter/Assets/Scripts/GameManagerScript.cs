@@ -20,10 +20,12 @@ public class GameManagerScript : MonoBehaviour {
 
 	private float maxHeight;
 	private float minHeight;
-	private float corgiHeight;
 	private float spawnOffset = 4.5f;
+	private float maxBound = 3.0f;
+	private float minBound = -4.25f;
 
 	public bool paused;
+	GUIStyle style;
 
     private enum characterCodes {
         BLUE,
@@ -40,10 +42,6 @@ public class GameManagerScript : MonoBehaviour {
 			cam = Camera.main;
 		
 		paused = false;
-
-		// Camera bounds
-		Vector3 upperCorner = new Vector3 (Screen.width, Screen.height, 0);
-		Vector3 targetHeight = cam.ScreenToWorldPoint (upperCorner);
 
         GameObject.Find("BlueCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.BLUE);
         GameObject.Find("PinkCharacter").SetActive(PlayerPrefs.GetInt("CharacterRep") == (int) characterCodes.PINK);
@@ -66,16 +64,22 @@ public class GameManagerScript : MonoBehaviour {
 			player = GameObject.Find("OrangeCharacter");
 
 		// Get the corgi's renderer
-		Renderer corgiRend = corgi.GetComponent<Renderer>();
+		//Renderer corgiRend = corgi.GetComponent<Renderer>();
 
 		// Corgi bounds
-		corgiHeight = corgiRend.bounds.extents.y;
-		maxHeight = targetHeight.y - (corgiHeight * 3.0f);
-		minHeight = corgiHeight * 2.5f;
+		maxHeight = maxBound;
+		minHeight = minBound;
+		style = new GUIStyle ();
+		style.normal.textColor = Color.black;
 
 		DisplayTime();
 		DisplayLives();
 		StartCoroutine (Spawn ());
+	}
+		
+	void OnGUI () {
+		//GUI.Label(new Rect(130, 300, 200, 100), "max = " + maxHeight, style );  
+		//GUI.Label(new Rect(130, 400, 200, 100), "min = " + minHeight, style ); 
 	}
 
 	public void TogglePauseMenu (bool pause) {
@@ -104,8 +108,9 @@ public class GameManagerScript : MonoBehaviour {
 		// Make sure corgis only spawn within certain units of the player
 		maxHeight = player.gameObject.GetComponent<Rigidbody2D> ().position.y + spawnOffset;
 		minHeight = player.gameObject.GetComponent<Rigidbody2D> ().position.y - spawnOffset;
-		Mathf.Clamp (maxHeight, corgiHeight * 2.5f, Screen.height - (corgiHeight * 3.0f));
-		Mathf.Clamp (minHeight, corgiHeight * 2.5f, Screen.height - (corgiHeight * 3.0f));
+		maxHeight = Mathf.Clamp (maxHeight, minBound, maxBound);
+		minHeight = Mathf.Clamp (minHeight, minBound, maxBound); 
+
 		//if (!paused) {
 			if (PlayerPrefs.GetInt("GameMode") == 0) {
 				if (timeLeft > 0)
@@ -138,7 +143,7 @@ public class GameManagerScript : MonoBehaviour {
 						// Spawn in bounds of camera
 						Vector3 spawnPosition = new Vector3 (
 							transform.position.x, 
-							Random.Range (-maxHeight, maxHeight - corgiHeight * 2.5f), 
+							Random.Range (minHeight, maxHeight), 
 							0.0f);
 
 						// No rotation
@@ -156,7 +161,7 @@ public class GameManagerScript : MonoBehaviour {
 						// Spawn in bounds of camera
 						Vector3 spawnPosition = new Vector3 (
 							transform.position.x, 
-							Random.Range (-maxHeight, maxHeight - corgiHeight * 3.0f), 
+							Random.Range (minHeight, maxHeight), 
 							0.0f);
 
 						// No rotation
