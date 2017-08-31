@@ -111,16 +111,26 @@ public class GameManagerScript : MonoBehaviour {
 		maxHeight = Mathf.Clamp (maxHeight, minBound, maxBound);
 		minHeight = Mathf.Clamp (minHeight, minBound, maxBound); 
 
-		//if (!paused) {
-			if (PlayerPrefs.GetInt("GameMode") == 0) {
-				if (timeLeft > 0)
-					timeLeft -= Time.deltaTime;
-				DisplayTime();
-			}
-			else if (PlayerPrefs.GetInt("GameMode") == 1) {
-				DisplayLives();
-			}
-		//}
+		if (PlayerPrefs.GetInt("GameMode") == 0) {
+			if (timeLeft > 0)
+				timeLeft -= Time.deltaTime;
+			else
+				EndGame ();
+			DisplayTime();
+		}
+		else if (PlayerPrefs.GetInt("GameMode") == 1) {
+			if (lives > 0)
+				DisplayLives ();
+			else
+				EndGame ();
+		}
+	}
+
+	void EndGame () {
+		// Save score at end
+		PlayerPrefs.SetInt("Score", player.GetComponent<ScoreScript>().getScore());
+		// Load game over screen
+		SceneManager.LoadScene (GAME_OVER);
 	}
 
 	void DisplayTime () {
@@ -156,7 +166,7 @@ public class GameManagerScript : MonoBehaviour {
 				}
 			}
 			else if (PlayerPrefs.GetInt("GameMode") == 1) {
-				while (lives > 1) {
+				while (lives > 0) {
 					if (Time.timeScale != 0) {
 						// Spawn in bounds of camera
 						Vector3 spawnPosition = new Vector3 (
@@ -173,10 +183,6 @@ public class GameManagerScript : MonoBehaviour {
 					}
 				}
 			}
-			// Save score at end
-			PlayerPrefs.SetInt("Score", player.GetComponent<ScoreScript>().getScore());
-			// Load game over screen
-			SceneManager.LoadScene (GAME_OVER);
 		}
 	}
 }
